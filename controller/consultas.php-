@@ -1,0 +1,80 @@
+<?php
+define('tmAu347djsa', true);//VARIABLE PARA QUE DEJAR VER CONTENIDO POR REQUIRE
+require '../modelos/seguridad.php';
+require '../parametros/conexion.php';
+require '../parametros/seguridad.php';
+
+if(!isset($_GET['opcion'])){
+	echo 'ACCESO RESTRINGUIDO';
+	exit();
+}
+session_start();
+if(comprobarLogueo() == FALSE){
+	echo 'ACCESO RESTRINGUIDO X';
+	exit();
+}
+$opcion = $_GET['opcion'];
+$Seguridad = new Seguridad;
+$resultados = array();
+
+if($opcion == 1){//######################  MONITOR  ##########################
+	$ticketid = $_POST['ticketid'];
+	$resultados = $Seguridad->consultarComentariosTicket($ticketid);
+}
+elseif($opcion == 2){//######################  TIPOS APLICATIVOS  ##########################
+	$tipoSoporteid = $_POST['tipoSoporteid'];
+	$resultados = $Seguridad->consultarTipoAplicativo($tipoSoporteid);
+}
+elseif($opcion == 3){//######################  GUARDAR TICKET  ##########################
+	$tipoTicket = $_POST['tipoTicket'];
+	$tipoSoporte = $_POST['tipoSoporte'];
+	$tipoAplicativo = $_POST['tipoAplicativo'];
+	$detieneOperacion = $_POST['detieneOperacion'];
+	$descripcion = $_POST['descripcion'];
+	$usuarioid = $_SESSION['usuarioid'];
+	$resultado = $Seguridad->guardarTicket($tipoTicket,$tipoSoporte,$tipoAplicativo,$detieneOperacion,$descripcion,$usuarioid);
+		
+	if($resultado == 1){
+		$email = $Seguridad->consultarCorreo($_SESSION['usuarioid']);
+		pclose(popen('C:\xampp\htdocs\soporte\parametros\psexec -d C:\xampp\php\php.exe C:\xampp\htdocs\soporte\controller\enviarCorreo.php '
+			.' u47r21HD378Jd63j51 '.$email.' "Ticket se ha registrado" "<p>Gracias por ponerte en contacto con nosotros. Esta es una respuesta automatizada para confirmar que hemos recibido tu ticket. </p><p><b>Problema reportado</b>: '.utf8_decode($descripcion).'</p>"> result.txt 2> error.log' , 'r'));
+	}
+	
+	array_push($resultados,array('numeroAfectados' => $resultado));
+}
+elseif($opcion == 4){//######################  GUARDAR Comentario  ##########################
+	$ticketid = $_POST['ticketid'];
+	$comentario = $_POST['comentario'];
+	$usuarioid = $_SESSION['usuarioid'];
+	$resultado = $Seguridad->guardarComentario($ticketid,$comentario,$usuarioid);
+	
+	if($resultado == 1){
+		$email = $Seguridad->consultarCorreoTicket($ticketid);
+		//error_log('email comentario: '.$email);
+		pclose(popen('C:\xampp\htdocs\soporte\parametros\psexec -d C:\xampp\php\php.exe C:\xampp\htdocs\soporte\controller\enviarCorreo.php '
+			.' u47r21HD378Jd63j51 '.$email.' "Seguimiento a su ticket No. '.$ticketid.'" "<p><b>No. Ticket:</b> '.$ticketid.'</p><p><b>Comentario Agregado:</b> '.utf8_decode($comentario).'</p>"> result.txt 2> error.log' , 'r'));
+	}
+	
+	array_push($resultados,array('numeroAfectados' => $resultado));
+}
+elseif($opcion == 5){//######################  CONSULTAR TICKETS  ##########################
+	$resultados = $Seguridad->consultarTickets();
+}
+elseif($opcion == 6){//######################  Consultar estatus  ##########################
+	$resultados = $Seguridad->consultarEstatus();
+}
+elseif($opcion == 7){//######################  CAMBIAR ESTATUS TICKET  ##########################
+	$ticketid = $_POST['ticketid'];
+	$estatusid = $_POST['estatusid'];
+	$usuarioid = $_SESSION['usuarioid'];
+	$resultado = $Seguridad->cambiarEstatusTicket($ticketid,$estatusid,$usuarioid);
+	array_push($resultados,array('numeroAfectados' => $resultado));
+}
+elseif($opcion == 8){//######################  CONSULTAR NUEVOS TICKETS  ##########################
+	$ticketid = $_POST['ticketid'];
+	$resultado = $Seguridad->consultarNuevosTickets($ticketid);
+	array_push($resultados,array('countNuevos' => $resultado));
+}
+
+print '{"resultados":'.json_encode($resultados).'}';
+?>
