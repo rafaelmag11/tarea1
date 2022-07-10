@@ -1,0 +1,13 @@
+<?php
+function conexionBD(){
+    $servidor   = '192.168.1.8';
+    $nombreBD   = 'soporte';
+    $usuario    = 'admin';
+    $contrasena = '123456';
+    $conexion = new mysqli($servidor,$usuario,$contrasena,$nombreBD);
+    if($conexion->connect_error){
+        die('Error en la conexion : '.$conexion->connect_errno.'-'.$conexion->connect_error);
+    }
+    return $conexion;
+}
+?>
