@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>life.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>DFF7FABA0A1AA359A2DEABE37CE836D7FA1A9446</string>
+				<key>dateExpires</key>
+				<string>19/11/22</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>4682Q6QAJV.com.bbva.estratega.life</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>4682Q6QAJV</string>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>life.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>29c92dd0-dae0-4812-8c3f-0f4619877971</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.bbva.estratega.life</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>4682Q6QAJV</string>
+				<key>name</key>
+				<string>Digital Experiences SAPI de CV</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
